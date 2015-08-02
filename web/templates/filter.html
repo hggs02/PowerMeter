@@ -5,35 +5,7 @@
 {% block styles %}
 {{super()}}
 <link href="{{ url_for('static', filename='/css/jquery-ui.css') }}" rel="stylesheet">
-<style type="text/css">
-.table-hover tbody tr:hover td {
-    background: rgb(45, 45, 45);
-    font-weight: bold;
-    color: white;
-    
-}
 
-thead {
-    font-weight: bold;
-    text-align: center;
-}
-
-#style1{
-    background: rgb(45, 45, 45);
-    font-weight: bold;
-    color: white;
-    text-align: center;
-    
-}
-
-tbody {
-    
-    
-    text-align: center;
-}
-
-
-</style>
 
 <link href="{{url_for('.static', filename='/css/bootstrap-combined.min.css')}}" rel="stylesheet">
 
