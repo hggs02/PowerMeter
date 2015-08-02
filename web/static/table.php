@@ -29,8 +29,8 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>mTime</th>
-            <th>IP</th>
+            <th>Time</th>
+            <th>Consumption</th>
           </tr>
         </thead>
         <tbody>
