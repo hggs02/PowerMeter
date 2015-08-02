@@ -26,7 +26,9 @@ app = Flask (__name__)
 
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:aaggss@localhost/dredger'
+
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:aaggss@localhost/dredger'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:aaggss@localhost/dredger'
 app.secret_key = 'my secret key is this'
 login_manager = LoginManager()
 login_manager.session_protection ='strong'
@@ -62,22 +64,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
     
-"""class dieselLevel(db.Model):
-    __tablename__ = 'dieselLevel'
-    id = db.Column(db.Integer, primary_key=True)
-    device = db.Column(db.String(25))
-    level = db.Column(db.Integer)
-    mTime = db.Column(db.DateTime,unique=True)  # If not unique then there will be logical errors
-    ip = db.Column(db.String(15))
 
-    def __init__(self, id,device, level,mTime,ip):
-        #self.id=id
-        self.device = device
-        self.level = level
-        self.mTime = mTime
-        self.ip = ip
-    def __repr__(self):
-        return str(self.device)+','+str(self.level)+','+str(self.mTime)+','+str(self.ip)+'\n'"""
 
 class dredger(db.Model):
     __tablename__ = 'db'
@@ -179,26 +166,6 @@ def login():
     return render_template('login.html')
 
 
-""" ((Test code))
-@app.route('/',methods=['GET','POST'])
-def login():
-    #form = LoginForm()
-    if request.method == 'POST':
-        userName=request.form['username']
-        
-        if 'checkbox' in request.form:
-            checkbox = True
-        else:
-            checkbox = False
-
-        #print '--------->((('+str(userName)+')))<--------, '+ str(checkbox) + ','+ str(type(checkbox))
-        #user = User.query.filter_by(email=userName).first()
-        if True:
-            #login_user(user,checkbox)
-            return redirect(request.args.get('next') or url_for('home'))
-        flash ('Invalid credentials!!')
-    return render_template('login.html')
-"""
 
 
 
