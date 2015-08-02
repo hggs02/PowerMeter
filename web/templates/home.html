@@ -18,7 +18,7 @@
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>                        
 	          </button>
-	          <a class="navbar-brand" href="/select"><p><img width="20" height="20" src="{{ url_for('static', filename='/img/favicon.ico') }}"> RPi</p></a>
+	          <a class="navbar-brand"><p><img width="20" height="20" src="{{ url_for('static', filename='/img/favicon.ico') }}"> RPi</p></a>
 	        </div>
 	        <div class="collapse navbar-collapse" id="myNavbar">
 	          <ul class="nav navbar-nav">
@@ -45,13 +45,16 @@
 
 
 {% block page_content %}
+<div class="container">
+	<div class="page-header">
+	        <h2 >Live Data</h2>
+	</div>
+</div>
 
 <div class="container">
- 
-  <h2 class="page-header" style="color:white;">Dredger 1: Flowchart</h2>
-  
+<br/>
+	<iframe allowtransparency="true"  src="{{url_for('.static', filename='table.php')}}" width="100%" height="98"></iframe>
 </div>
-<iframe allowtransparency="true" style="background: #FFFFFF;" src="{{url_for('.static', filename='table.php')}}" width="100%" height="98"></iframe>
  <!-- ###################### --> 
 
 <!--Ends here $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-->
