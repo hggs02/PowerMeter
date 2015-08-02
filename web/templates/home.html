@@ -11,7 +11,7 @@
 			var name= 'dummyNoUse';
 			$.post("{{ url_for('static', filename='ajax/dredger1/fetch_from_db.php') }}",{name:name},function(data){
 			$('span#time').text(data.time);
-		    $('span#storage_tank_level').text(data.consumption);
+		    $('span#consumption').text(data.consumption);
 		    },'json');
 			function redirect(num){
 				number=num;
@@ -29,19 +29,8 @@
 					var name= 'dummyNoUse';
 					$.post("{{ url_for('static', filename='ajax/dredger1/fetch_from_db.php') }}",{name:name},function(data){
 					$('span#time').text(data.time);
-				    $('span#storage_tank_level').text(data.storage_tank_level);
-				    $('span#storage_tank_cap').text(data.storage_tank_cap);
-				    $('span#service_tank_level').text(data.service_tank_level);
-				    $('span#service_tank_cap').text(data.service_tank_cap);
-				    $('span#flowmeter_1_in').text(data.flowmeter_1_in);
-				    $('span#flowmeter_1_out').text(data.flowmeter_1_out);
-				    $('span#engine_1_level').text(data.flowmeter_1_in-data.flowmeter_1_out);
-				    $('span#engine_1_status').text(data.engine_1_status);
-				    $('span#flowmeter_2_in').text(data.flowmeter_2_in);
-				    $('span#flowmeter_2_out').text(data.flowmeter_2_out);
-				    $('span#engine_2_level').text(data.flowmeter_2_in-data.flowmeter_2_out);
-				    $('span#engine_2_status').text(data.engine_2_status);
-					},'json');
+				    $('span#consumption').text(data.consumption);
+				    },'json');
 					number=3;
 				}
 			}
@@ -117,7 +106,7 @@
 			      		<div class="col-xs-4 text-center col-xs-offset-4 other ">
 				        	<span style="color:black;" class="btn btn-default btn-xs">
 				        	<b>
-				        	<span id="storage_tank_cap" style="color:rgb(184,0,0);"></span><br/>Storage Tank<br/> <span id='storage_tank_level' style="color:rgb(0, 32, 129);"></span>
+				        	<span id="storage_tank_cap" style="color:rgb(184,0,0);"></span><br/>Storage Tank<br/> <span id='consumption' style="color:rgb(0, 32, 129);"></span>
 				        	</b>
 				        	</span> 
 					    </div> 
@@ -292,7 +281,7 @@
 				        	<b>
 				        	<span id="storage_tank_cap" style="color:rgb(184,0,0);"></span><br/>
 				        	Storage Tank<br/> 
-				        	<span id='storage_tank_level' style="color:rgb(0, 32, 129);"></span> 
+				        	<span id='consumption' style="color:rgb(0, 32, 129);"></span> 
 				        	</b>
 				        	</span> 
 
