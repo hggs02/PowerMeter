@@ -69,19 +69,9 @@ class User(UserMixin, db.Model):
 class dredger(db.Model):
     __tablename__ = 'db'
     id                  = db.Column(db.Integer, primary_key=True)
-    dredger_name       = db.Column(db.String(25))
     time                = db.Column(db.DateTime,unique=True)  # If not unique then there will be logical errors
-    storage_tank_level  = db.Column(db.Integer)
-    storage_tank_cap    = db.Column(db.String(25))
-    service_tank_level  = db.Column(db.Integer)
-    service_tank_cap    = db.Column(db.String(25))
-    flowmeter_1_in      = db.Column(db.Integer)
-    flowmeter_1_out     = db.Column(db.Integer)
-    engine_1_status     = db.Column(db.String(25))
-    flowmeter_2_in      = db.Column(db.Integer)
-    flowmeter_2_out     = db.Column(db.Integer)
-    engine_2_status     = db.Column(db.String(25))
-
+    consumption         = db.Column(db.String(5))
+    
     def __repr__(self):
         return self.dredger_name+ ',' +str(self.time)+ ',' +str(self.storage_tank_level)+ ',' +\
                 self.storage_tank_cap+ ',' +str(self.service_tank_level)+ ',' +self.service_tank_cap+ ',' +\
@@ -133,7 +123,7 @@ class database():
     def filterRange(self,fromTime,toTime,page,dredger_name="dredger1"):
         #print "---------------------------"
         results = dredger.query.filter(dredger.time <= toTime).filter(dredger.time >= fromTime).\
-                        filter_by(dredger_name = dredger_name).order_by(dredger.time.desc()).\
+                        order_by(dredger.time.desc()).\
                         paginate(page, POSTS_PER_PAGE, False)
         #print results.__repr__()
         #print "---------------------------"
@@ -161,7 +151,7 @@ def login():
         user = User.query.filter_by(username=userName).first()
         if user is not None and user.verify_password(request.form['password']):
             login_user(user,checkbox)
-            return redirect(request.args.get('next') or url_for('select'))
+            return redirect(request.args.get('next') or url_for('home'))
         flash ('Invalid credentials!!')
     return render_template('login.html')
 
@@ -176,17 +166,17 @@ def select():
     return render_template('select.html')
 
 ################# DREDGER 1 Start #############################
-@app.route ("/dredger1/home", methods=['GET', 'POST'])
+@app.route ("/home", methods=['GET', 'POST'])
 @login_required
-def dredger1_home():
-    return render_template('dredger1/home.html')
+def home():
+    return render_template('home.html')
 
-@app.route ("/dredger1/filter", methods=['GET', 'POST'])
-@app.route ("/dredger1/filter/", methods=['GET', 'POST'])
-@app.route('/dredger1/filter/<int:page>', methods=['GET', 'POST'])
+@app.route ("/filter", methods=['GET', 'POST'])
+@app.route ("/filter/", methods=['GET', 'POST'])
+@app.route('/filter/<int:page>', methods=['GET', 'POST'])
 
 @login_required
-def dredger1_filter(page=1,fromTime=None,toTime=None):
+def filter(page=1,fromTime=None,toTime=None):
 
     
     dbObj=database()
@@ -217,7 +207,7 @@ def dredger1_filter(page=1,fromTime=None,toTime=None):
             else:
                 flash('(From, '+str(fromDate)+'): '+str(e))
             #print "------------>1: " + 'results= None, ' + str(len(results.items))
-            return render_template('dredger1/filter.html',results=None,fromDate=fromDate,toDate=toDate)
+            return render_template('filter.html',results=None,fromDate=fromDate,toDate=toDate)
         
 
         
@@ -231,7 +221,7 @@ def dredger1_filter(page=1,fromTime=None,toTime=None):
             else:
                 flash('(To, '+str(toDate)+'): '+str(e))
             #print "------------>2: " + 'results= None, ' + str(len(results.items))
-            return render_template('dredger1/filter.html',results=None,fromDate=fromDate,toDate=toDate)
+            return render_template('filter.html',results=None,fromDate=fromDate,toDate=toDate)
         
         #print 'from:'+str(type(fromTime))+': '+str(fromTime)
         #print 'to:'+str(type(toTime))+': '+str(toTime)
@@ -259,12 +249,12 @@ def dredger1_filter(page=1,fromTime=None,toTime=None):
             toDate
         except NameError:
             #print "------------>3: " + 'results= ' + str(len(results.items))
-            return render_template('dredger1/filter.html',results=results,fromTime=fromTime,toTime=toTime)        # If fromDate and toDate doesn't exist, then the page is being loaded for the first time                          
+            return render_template('filter.html',results=results,fromTime=fromTime,toTime=toTime)        # If fromDate and toDate doesn't exist, then the page is being loaded for the first time                          
             #return "Hello"
         else:
             #print "------------>4: " + 'results= ' + str(len(results.items))
-            return render_template('dredger1/filter.html',results=results,fromDate=fromDate,toDate=toDate,fromTime=fromTime,toTime=toTime)  # To make sure the date and time data doesn't vanish when clicking accept
-            #return render_template('dredger1/filter.html',results=results)
+            return render_template('filter.html',results=results,fromDate=fromDate,toDate=toDate,fromTime=fromTime,toTime=toTime)  # To make sure the date and time data doesn't vanish when clicking accept
+            #return render_template('filter.html',results=results)
             #return "Hello World"
         
     fromTime=request.args.get('fromTime','')
@@ -289,127 +279,11 @@ def dredger1_filter(page=1,fromTime=None,toTime=None):
     #print 'results='+str(results)
     #print 'request.method='+str(request.method)
     #print '-----------------------------------------------------------'
-    return render_template('dredger1/filter.html',results=results,fromTime=fromTime,toTime=toTime)
+    return render_template('filter.html',results=results,fromTime=fromTime,toTime=toTime)
 
 ################# DREDGER 1 End #############################
 
-################# DREDGER 2 Start #############################
-@app.route ("/dredger2/home", methods=['GET', 'POST'])
-@login_required
-def dredger2_home():
-    return render_template('dredger2/home.html')
 
-@app.route ("/dredger2/filter", methods=['GET', 'POST'])
-@app.route ("/dredger2/filter/", methods=['GET', 'POST'])
-@app.route('/dredger2/filter/<int:page>', methods=['GET', 'POST'])
-
-@login_required
-def dredger2_filter(page=1,fromTime=None,toTime=None):
-
-    
-    dbObj=database()
-    if request.method == 'POST':
-        results=None
-        fromDate=request.form['fromDate']
-        fromHour=request.form['fromHour']
-        fromMin=request.form['fromMin']
-
-        toDate=request.form['toDate']
-        toHour=request.form['toHour']
-        toMin=request.form['toMin']
-
-        #print 'From:'+ str(fromDate) +','+str(fromHour)+','+str(fromMin)
-        #print 'From:'+ str(toDate) +','+str(toHour)+','+str(toMin)
-
-        fromTime= fromDate+' '+fromHour+':'+fromMin+':00'
-        toTime= toDate+' '+toHour+':'+toMin+':00'
-        
-        
-        try:
-            fromTime = datetime.strptime(fromTime, "%Y-%m-%d %H:%M:%S")
-            #fromTime = fromTime.strftime("%Y-%m-%d %H:%M:%S")
-        except ValueError as e:
-            if 'format' in str(e):
-                flash('Error in format! Invalid Entry:- "'+str(fromDate)+'".'+\
-                    '  Use "yyyy-mm-dd" format for "From Date"')
-            else:
-                flash('(From, '+str(fromDate)+'): '+str(e))
-            #print "------------>1: " + 'results= None, ' + str(len(results.items))
-            return render_template('dredger2/filter.html',results=None,fromDate=fromDate,toDate=toDate)
-        
-
-        
-        try:
-            toTime = datetime.strptime(toTime, "%Y-%m-%d %H:%M:%S")
-            #toTime = toTime.strftime("%Y-%m-%d %H:%M:%S")
-        except ValueError as e:
-            if 'format' in str(e):
-                flash('Error in format! Invalid Entry:- "'+str(toDate)+'".'+\
-                    '  Use "yyyy-mm-dd" format for "To Date"')
-            else:
-                flash('(To, '+str(toDate)+'): '+str(e))
-            #print "------------>2: " + 'results= None, ' + str(len(results.items))
-            return render_template('dredger2/filter.html',results=None,fromDate=fromDate,toDate=toDate)
-        
-        #print 'from:'+str(type(fromTime))+': '+str(fromTime)
-        #print 'to:'+str(type(toTime))+': '+str(toTime)
-
-        #results=dbObj.filterRange(fromTime,toTime,page)
-        """fromTime='2008-02-16 00:00:00'
-        toTime='2015-04-12 00:00:00'"""
-        #1
-        
-
-        
-        results = dbObj.filterRange(fromTime,toTime,1,"dredger2")
-        #print 'fromTime='+str(fromTime)
-        #print 'toTime='+str(toTime)
-        #print 'results='+str(results)
-        #print 'request.method='+str(request.method)
-        
-        if not results:
-            results=None
-
-
-        
-        try:
-            fromDate
-            toDate
-        except NameError:
-            #print "------------>3: " + 'results= ' + str(len(results.items))
-            return render_template('dredger2/filter.html',results=results,fromTime=fromTime,toTime=toTime)        # If fromDate and toDate doesn't exist, then the page is being loaded for the first time                          
-            #return "Hello"
-        else:
-            #print "------------>4: " + 'results= ' + str(len(results.items))
-            return render_template('dredger2/filter.html',results=results,fromDate=fromDate,toDate=toDate,fromTime=fromTime,toTime=toTime)  # To make sure the date and time data doesn't vanish when clicking accept
-            #return render_template('dredger2/filter.html',results=results)
-            #return "Hello World"
-        
-    fromTime=request.args.get('fromTime','')
-    toTime=request.args.get('toTime','')
-    #2
-    #print '-----------------------------------------------------------'
-    
-    if fromTime and toTime:
-        results = dbObj.filterRange(fromTime,toTime,page,"dredger2")
-    else:
-        results=None
-    
-        
-    """print "------------>5: " + 'page= '+str(page)+'results= ' ,
-                if results:
-                    str(len(results.items))
-                else:
-                    print 'None'"""
-
-    #print 'fromTime='+str(fromTime)
-    #print 'toTime='+str(toTime)
-    #print 'results='+str(results)
-    #print 'request.method='+str(request.method)
-    #print '-----------------------------------------------------------'
-    return render_template('dredger2/filter.html',results=results,fromTime=fromTime,toTime=toTime)
-
-################# DREDGER 2 End #############################
 @app.route("/logout",methods=["GET"])
 @login_required
 def logout():
