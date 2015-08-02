@@ -16,7 +16,6 @@
 
 <?php
 
-    echo "Hi!!!" 
     $rows = mysql_fetch_assoc($result);
     $return_data=array('time' => $rows['time'],
         'consumption'  => $rows['consumption']);
