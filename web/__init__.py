@@ -19,7 +19,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 POSTS_PER_PAGE = 20  # pagination
-#app = Flask (__name__, static_url_path='\C:\Users\$$\Desktop\dredger_bootstrap-2march20\static')
 app = Flask (__name__)
 
 
@@ -27,7 +26,6 @@ app = Flask (__name__)
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:aaggss@localhost/dredger'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:aaggss@localhost/dredger'
 app.secret_key = 'my secret key is this'
 login_manager = LoginManager()
@@ -66,33 +64,14 @@ class User(UserMixin, db.Model):
     
 
 
-class dredger(db.Model):
+class table(db.Model):
     __tablename__ = 'db'
     id                  = db.Column(db.Integer, primary_key=True)
     time                = db.Column(db.DateTime,unique=True)  # If not unique then there will be logical errors
     consumption         = db.Column(db.String(5))
     
-    def __repr__(self):
-        return self.dredger_name+ ',' +str(self.time)+ ',' +str(self.storage_tank_level)+ ',' +\
-                self.storage_tank_cap+ ',' +str(self.service_tank_level)+ ',' +self.service_tank_cap+ ',' +\
-                str(self.flowmeter_1_in)+ ',' +str(self.flowmeter_1_out)+ ',' +self.engine_1_status+ ',' +str(self.flowmeter_2_in)+ ',' +\
-                str(self.flowmeter_2_out)+ ',' +str(self.engine_2_status)+'\n'
-
     def __init__(self, arg):
-        
-        self.dredger_name       = arg['dredger_name']
-        self.time                = arg['time']
-        self.storage_tank_level  = arg['storage_tank_level']
-        self.storage_tank_cap    = arg['storage_tank_cap']
-        self.service_tank_level  = arg['service_tank_level']
-        self.service_tank_cap    = arg['service_tank_cap']
-        self.flowmeter_1_in      = arg['flowmeter_1_in']
-        self.flowmeter_1_out     = arg['flowmeter_1_out']
-        self.engine_1_status     = arg['engine_1_status']
-        self.flowmeter_2_in      = arg['flowmeter_2_in']
-        self.flowmeter_2_out     = arg['flowmeter_2_out']
-        self.engine_2_status     = arg['engine_2_status']
-
+        pass
 
 
 class database():
@@ -101,29 +80,10 @@ class database():
         db.create_all()
     def drop_all(self):
         db.drop_all()
-
-    def fetchAll(self,dredger_name="dredger1"):
-        try:                                                # Will fail if table doesn't exist
-            data = dredger.query.order_by(dredger.time.desc()).all() # Select * FROM TABLE ORDER BY time
-        except Exception as e:
-            flash('fetchAll: '+str(e))
-            #print 'Error:' + str(e)
-        #print data.__repr__()
-        return data
-    def insertDb(self,arg,dredger_name="dredger1"):
-        try:
-            data=dredger(arg)
-            db.session.add(data)
-            db.session.commit()
-        except Exception as e:
-            flash('insertDb: '+str(e))
-            #print 'insertDb: '+str(e)
-        
-    
-    def filterRange(self,fromTime,toTime,page,dredger_name="dredger1"):
+    def filterRange(self,fromTime,toTime,page):
         #print "---------------------------"
-        results = dredger.query.filter(dredger.time <= toTime).filter(dredger.time >= fromTime).\
-                        order_by(dredger.time.desc()).\
+        results = table.query.filter(table.time <= toTime).filter(table.time >= fromTime).\
+                        order_by(table.time.desc()).\
                         paginate(page, POSTS_PER_PAGE, False)
         #print results.__repr__()
         #print "---------------------------"
@@ -165,7 +125,6 @@ def login():
 def select():
     return render_template('select.html')
 
-################# DREDGER 1 Start #############################
 @app.route ("/home", methods=['GET', 'POST'])
 @login_required
 def home():
@@ -233,7 +192,7 @@ def filter(page=1,fromTime=None,toTime=None):
         
 
         
-        results = dbObj.filterRange(fromTime,toTime,1,"dredger1")
+        results = dbObj.filterRange(fromTime,toTime,1)
         #print 'fromTime='+str(fromTime)
         #print 'toTime='+str(toTime)
         #print 'results='+str(results)
@@ -263,7 +222,7 @@ def filter(page=1,fromTime=None,toTime=None):
     #print '-----------------------------------------------------------'
     
     if fromTime and toTime:
-        results = dbObj.filterRange(fromTime,toTime,page,"dredger1")
+        results = dbObj.filterRange(fromTime,toTime,page)
     else:
         results=None
     
@@ -281,7 +240,6 @@ def filter(page=1,fromTime=None,toTime=None):
     #print '-----------------------------------------------------------'
     return render_template('filter.html',results=results,fromTime=fromTime,toTime=toTime)
 
-################# DREDGER 1 End #############################
 
 
 @app.route("/logout",methods=["GET"])
