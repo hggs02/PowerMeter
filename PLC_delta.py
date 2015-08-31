@@ -5,58 +5,69 @@ import serial
 from time import sleep
 import datetime 
 
+import random
 
-class Sim900(object):
-    def __init__ (self,port,baud=9600,bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stop=serial.STOPBITS_ONE, timeout=1):
-        self.serialPort = serial.Serial(port,baud,bytesize,parity,stop,timeout)
+
+class Xbee(object):
+    def __init__ (self):
+        self.obj = serial.Serial('/dev/ttyUSB0',9600,timeout=1)
     
-    def sendAtCommand(self,command):
-        self.serialPort.write(bytes(command+'\r\n',encoding='ascii'))
-        self.status =  self.readCommandResponse()
-        return self.status
+    def xbee_write(self,data):
+        self.obj.write(str(data)+'\r\n')
+        
 
-    def readCommandResponse(self):
-        time.sleep(0.25)
+    def xbee_read(self):
         while True:
-            msg = self.serialPort.read(100).decode('ascii').strip()
-            if msg:
-                return msg
+            #val = self.obj.read(100).decode('ascii').strip()
+            val = self.obj.read(100).strip()
+            if val:
+                return val
     
     def __del__(self):
-        self.serialPort.close()
+        self.obj.close()
         
-                
+def dummyPacket():
+    val = random.randint(0,55)
+    return val
+
 
 if __name__ == '__main__':
-    #while True:
-    try:
-        instrument = minimalmodbus.Instrument('/dev/port1',1)
-        #instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1, minimalmodbus.MODE_ASCII)
-        instrument.serial.baudrate = 9600
-        instrument.serial.bytesize = 8
-        instrument.serial.parity = serial.PARITY_EVEN
-        instrument.serial.stopbits = 1
-        instrument.serial.timeout = 0.1
-        #instrument.debug='false'
-        instrument.mode = minimalmodbus.MODE_ASCII
-        #print instrument
-        
 
+    xb = Xbee()
+    
+    print('\t\tPOWER CONSUMPTION')
 
-        while True:
+    while True:
+        try:
+             
+            """
+            instrument = minimalmodbus.Instrument('/dev/port1',1)
+            #instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1, minimalmodbus.MODE_ASCII)
+            instrument.serial.baudrate = 9600
+            instrument.serial.bytesize = 8
+            instrument.serial.parity = serial.PARITY_EVEN
+            instrument.serial.stopbits = 1
+            instrument.serial.timeout = 0.1
+            #instrument.debug='false'
+            instrument.mode = minimalmodbus.MODE_ASCII
+            #print instrument
+            """
             time                = datetime.datetime.now()
-            consumption  = instrument.read_float(4201)/100000
+            #consumption  = instrument.read_float(4201)/100000
+            consumption = dummyPacket()
 
-            print('\t\tPOWER CONSUMPTION')
+            
             print('-------------------------------------------------------------')
             print('{0:20} ==> {1:5} units'.format('consumption',consumption))
+            xb.xbee_write(consumption)
             print('-------------------------------------------------------------')
             
-            raw_input()
+            #raw_input()
+            sleep(1)
             #print (level)
-    except Exception as e:
-        print(e)
-        sleep(1)
+        except Exception as e:
+            print(e)
+            sleep(1)
     
    
         
