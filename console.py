@@ -2,7 +2,7 @@ import serial
 import time
 import os
 
-obj = serial.Serial('/dev/ttyUSB0',
+obj = serial.Serial('COM6',
 	9600,
 	serial.EIGHTBITS,
 	serial.PARITY_NONE,
@@ -13,7 +13,7 @@ os.system('clear') 				# Works only in linux
 print('\t\tPOWER CONSUMPTION')
 
 while True:
-	data = obj.read(100)
+	data = obj.read(1000)
 	if data:
 	    print('-------------------------------------------------------')
 	    tm = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
