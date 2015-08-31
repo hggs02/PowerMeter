@@ -13,7 +13,7 @@ class Xbee(object):
         self.obj = serial.Serial('/dev/ttyUSB0',9600,timeout=1)
     
     def xbee_write(self,data):
-        self.obj.write(str(data)+'\r\n')
+        self.obj.write(data+'\r\n')
         
 
     def xbee_read(self):
@@ -59,7 +59,7 @@ if __name__ == '__main__':
             
             print('-------------------------------------------------------------')
             print('{0:20} ==> {1:5} units'.format('consumption',consumption))
-            xb.xbee_write(consumption)
+            xb.xbee_write(str(time)+';'+str(consumption))
             print('-------------------------------------------------------------')
             
             #raw_input()

@@ -1,6 +1,7 @@
 import serial
 import time
 import os
+from database_handler import database_class
 
 obj = serial.Serial('COM6',
 	9600,
@@ -8,14 +9,18 @@ obj = serial.Serial('COM6',
 	serial.PARITY_NONE,
 	serial.STOPBITS_ONE,
 	1)
-
+db = database_class()
 os.system('clear') 				# Works only in linux
 print('\t\tPOWER CONSUMPTION')
 
 while True:
-	data = obj.read(1000)
+	packet = obj.read(1000)
+	data = extractData(packet)
 	if data:
 	    print('-------------------------------------------------------')
-	    tm = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
-	    print '|',tm,'\tConsumption => \t',data,'Unit','|','\n'
+	    tm = data[0]
+	    power = data [1]
+	    print '|',tm,'\tConsumption => \t',power,'Unit','|','\n'
+	    db.insertDb(tm,power)
+
 	    
