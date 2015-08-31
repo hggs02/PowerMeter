@@ -2,10 +2,10 @@
 
 import minimalmodbus
 import serial
-from time import sleep
-import datetime 
+from time import sleep, strftime
 
 import random
+
 
 
 class Xbee(object):
@@ -52,18 +52,20 @@ if __name__ == '__main__':
             instrument.mode = minimalmodbus.MODE_ASCII
             #print instrument
             """
-            time                = datetime.datetime.now()
+            time  = strftime("%Y-%m-%d %H:%M:%S")
             #consumption  = instrument.read_float(4201)/100000
             consumption = dummyPacket()
 
             
             print('-------------------------------------------------------------')
             print('{0:20} ==> {1:5} units'.format('consumption',consumption))
-            xb.xbee_write(str(time)+';'+str(consumption))
+            packet = str(time)+';'+str(consumption)
+            print packet
+            xb.xbee_write(packet)
             print('-------------------------------------------------------------')
             
             #raw_input()
-            sleep(1)
+            sleep(3)
             #print (level)
         except Exception as e:
             print(e)
