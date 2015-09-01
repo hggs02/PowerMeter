@@ -27,7 +27,7 @@ bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:aaggss@localhost/dredger'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/pi/Desktop/PowerMeter/database.db'
 app.secret_key = 'my secret key is this'
 login_manager = LoginManager()
 login_manager.session_protection ='strong'
