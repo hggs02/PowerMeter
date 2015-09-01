@@ -10,9 +10,9 @@
 
   <body>
 	 <?php
-		$db = new SQLite3('mysqlitedb.db');
+		$db = new SQLite3('/home/pi/Desktop/PowerMeter/database.db');
 
-		$results = $db->query('SELECT bar FROM foo');
+		$results = $db->query('select * from backfill order by time desc limit 1');
 		
 	?>
 
@@ -34,7 +34,7 @@
 	  <tr>
               <td><?php echo 1?></td>
               <td><?php echo $row['time'] ?></td> 
-              <td><?php echo $row['pwer'] ?></td> 
+              <td><?php echo $row['power'] ?></td> 
             </tr>
 	      
 	   <?php } ?>
