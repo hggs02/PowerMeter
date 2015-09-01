@@ -3,7 +3,7 @@ import time
 import os
 from database_handler import database_class
 
-obj = serial.Serial('COM6',
+obj = serial.Serial('/dev/ttyUSB0',
         9600,
         serial.EIGHTBITS,
         serial.PARITY_NONE,

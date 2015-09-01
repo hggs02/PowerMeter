@@ -26,7 +26,8 @@ app = Flask (__name__)
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:aaggss@localhost/dredger'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:aaggss@localhost/dredger'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database.db'
 app.secret_key = 'my secret key is this'
 login_manager = LoginManager()
 login_manager.session_protection ='strong'
@@ -65,10 +66,10 @@ class User(UserMixin, db.Model):
 
 
 class table(db.Model):
-    __tablename__ = 'db'
+    __tablename__ = 'backfill'
     id                  = db.Column(db.Integer, primary_key=True)
     time                = db.Column(db.DateTime,unique=True)  # If not unique then there will be logical errors
-    consumption         = db.Column(db.String(5))
+    power         = db.Column(db.String(5))
     
     def __init__(self, arg):
         pass
@@ -95,7 +96,7 @@ class database():
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
+"""
 @app.route('/',methods=['GET','POST'])
 def login():
     #form = LoginForm()
@@ -107,23 +108,30 @@ def login():
         else:
             checkbox = False
 
-        #print '--------->((('+str(userName)+')))<--------, '+ str(checkbox) + ','+ str(type(checkbox))
+        print '--------->((('+str(userName)+')))<--------, '+ str(request.form['password'])
         user = User.query.filter_by(username=userName).first()
         if user is not None and user.verify_password(request.form['password']):
             login_user(user,checkbox)
             return redirect(request.args.get('next') or url_for('home'))
         flash ('Invalid credentials!!')
     return render_template('login.html')
+"""
+
+@app.route('/',methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        userName=request.form['username']
+        
+        user = User.query.filter_by(username=userName).first()
+
+        print '--------->((('+str(userName)+')))<--------, '+ str(request.form['password'])
+        if userName == 'admin' and request.form['password']=='admin':
+            login_user(user,False)
+            return redirect(request.args.get('next') or url_for('home'))
+        flash ('Invalid credentials!!')
+    return render_template('login.html')
 
 
-
-
-
-
-@app.route ("/select", methods=['GET', 'POST'])
-@login_required
-def select():
-    return render_template('select.html')
 
 @app.route ("/home", methods=['GET', 'POST'])
 @login_required
@@ -134,7 +142,7 @@ def home():
 @app.route ("/filter/", methods=['GET', 'POST'])
 @app.route('/filter/<int:page>', methods=['GET', 'POST'])
 
-@login_required
+#@login_required
 def filter(page=1,fromTime=None,toTime=None):
 
     

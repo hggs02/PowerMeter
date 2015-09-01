@@ -10,7 +10,7 @@ import random
 
 class Xbee(object):
     def __init__ (self):
-        self.obj = serial.Serial('/dev/ttyUSB0',9600,timeout=1)
+        self.obj = serial.Serial('/dev/ttyUSB1',9600,timeout=1)
     
     def xbee_write(self,data):
         self.obj.write(data+'\r\n')

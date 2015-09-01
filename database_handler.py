@@ -5,13 +5,13 @@ from datetime import datetime as dt
 
 while True:
 	try:
-		conn = sqlite3.connect('../database.db',check_same_thread=False)
+		conn = sqlite3.connect('database.db',check_same_thread=False)
 		#conn = sqlite3.connect('./backfill.db',check_same_thread=False)
 		cur = conn.cursor()
 		break
-    except Exception as e:
-        print 'backfill.py: ',e
-        time.sleep(1) #Wait 1 secs before retrying
+        except Exception as e:
+                print 'backfill.py: ',e
+                time.sleep(1) #Wait 1 secs before retrying
 
 
 class database_class():
