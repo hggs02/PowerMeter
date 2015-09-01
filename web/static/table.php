@@ -5,23 +5,19 @@
     <meta http-equiv="refresh" content="3">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="table.css">
-    <?php 
-    $hostname_connection = "localhost"; 
-    $database_connection = "dredger"; 
-    $username_connection = "root"; 
-    $password_connection = "aaggss"; 
-    $connection = mysql_connect($hostname_connection, $username_connection, $password_connection) or trigger_error(mysql_error(),E_USER_ERROR); 
-    mysql_select_db($database_connection,$connection) or die( mysql_error() ) ; 
-    ?>
+    
   </head>
 
   <body>
-    
-    <?php $display ="select * from db order by time desc limit 1"; 
-    $result=mysql_query($display,$connection) or die(mysql_error()); 
-    if($result == FALSE) 
-      { die(mysql_error()); }
-    ?>
+	 <?php
+		$db = new SQLite3('/home/pi/Desktop/PowerMeter/database.db');
+
+		$results = $db->query('select * from backfill order by time desc limit 1');
+		
+	?>
+
+	
+
 
     <div class="container">
                              
@@ -34,14 +30,18 @@
           </tr>
         </thead>
         <tbody>
-
-          <?php while($rows = mysql_fetch_assoc($result)){ ?>
-            <tr>
+	<?php while ($row = $results->fetchArray()) { ?>
+	  <tr>
               <td><?php echo 1?></td>
-              <td><?php echo $rows['time'] ?></td> 
-              <td><?php echo $rows['consumption'] ?></td> 
-            </tr> 
-          <?php } ?>
+              <td><?php echo $row['time'] ?></td> 
+              <td><?php echo $row['power'] ?></td> 
+            </tr>
+	      
+	   <?php } ?>
+	   
+	
+
+          
 
         </tbody>
       </table>
@@ -52,3 +52,6 @@
   </body>
 
 </html>
+
+
+
