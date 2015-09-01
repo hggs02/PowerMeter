@@ -9,29 +9,14 @@
   </head>
 
   <body>
-    
-	<?php
-	   class MyDB extends SQLite3
-	   {
-	      function __construct()
-	      {
-		 $this->open('/home/pi/Desktop/PowerMeter/database.db');
-	      }
-	   }
-	   $db = new MyDB();
-	   if(!$db){
-	      echo $db->lastErrorMsg();
-	   } else {
-	      echo "Opened database successfully\n";
-	   }
+	 <?php
+		$db = new SQLite3('mysqlitedb.db');
 
-	   $sql =<<<EOF
-	      select * from backfill order by time desc limit 1;
-EOF;
+		$results = $db->query('SELECT bar FROM foo');
+		
+	?>
 
-	   $ret = $db->query($sql);
-?>
-
+	
 
 
     <div class="container">
@@ -45,8 +30,7 @@ EOF;
           </tr>
         </thead>
         <tbody>
-	<?php
-	   while($row = $ret->fetchArray(SQLITE3_ASSOC) ){ ?>
+	<?php while ($row = $results->fetchArray()) { ?>
 	  <tr>
               <td><?php echo 1?></td>
               <td><?php echo $row['time'] ?></td> 
