@@ -3,7 +3,7 @@
    {
       function __construct()
       {
-         $this->open('test.db');
+         $this->open('../../database.db');
       }
    }
    $db = new MyDB();
