@@ -13,7 +13,7 @@ class Xbee(object):
         self.obj = serial.Serial('/dev/ttyUSB1',9600,timeout=1)
     
     def xbee_write(self,data):
-        self.obj.write(data+'\r\n')
+        self.obj.write(data)
         
 
     def xbee_read(self):
