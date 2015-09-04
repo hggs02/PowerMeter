@@ -3,6 +3,7 @@
 import minimalmodbus
 import serial
 from time import sleep, strftime
+from database_handler import database_class
 
 import random
 
@@ -29,6 +30,7 @@ def dummyPacket():
     val = random.randint(0,55)
     return val
 
+db = database_class()
 
 if __name__ == '__main__':
 
@@ -60,6 +62,7 @@ if __name__ == '__main__':
             print('{0:20} ==> {1:5} units'.format('consumption',consumption))
             packet = str(time)+';'+str(consumption)
             print packet
+            db.insertDb(time,consumption)
             xb.xbee_write(packet)
             print('-------------------------------------------------------------')
             
