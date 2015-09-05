@@ -6,7 +6,7 @@ from database_handler import database_class
 
 class Xbee(object):
     def __init__ (self):
-        self.obj = serial.Serial('/dev/port4',9600,timeout=1)
+        self.obj = serial.Serial('/dev/xb2',9600,timeout=1)
     
     def xbee_write(self,data):
         self.obj.write(data)
