@@ -10,18 +10,12 @@ import random
 
 
 class Xbee(object):
+    
     def __init__ (self):
-        self.obj = serial.Serial('/dev/ttyUSB0',9600,timeout=1)
+        self.obj = serial.Serial('/dev/port2',9600,timeout=1)
     
     def xbee_write(self,data):
         self.obj.write(data)
-        
-
-    def xbee_read(self):
-        while True:
-            val = self.obj.read(100).strip()
-            if val:
-                return val
     
     def __del__(self):
         self.obj.close()
@@ -41,7 +35,7 @@ if __name__ == '__main__':
     while True:
         try:
              
-            
+            """
             instrument = minimalmodbus.Instrument('/dev/ttyUSB0',1)
             #instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1, minimalmodbus.MODE_ASCII)
             instrument.serial.baudrate = 9600
@@ -52,23 +46,20 @@ if __name__ == '__main__':
             #instrument.debug='false'
             instrument.mode = minimalmodbus.MODE_ASCII
             #print instrument
-            
+            """
             time  = strftime("%Y-%m-%d %H:%M:%S")
             #consumption  = instrument.read_register(4209)
             consumption = dummyPacket()
 
             
-            print('-------------------------------------------------------------')
-            print('{0:20} ==> {1:5} units'.format('consumption',consumption))
+            print('-------------------------------------------------')
+            print '|',time,'\tConsumption => \t',consumption,'Unit','|','\n'
             packet = str(time)+';'+str(consumption)
-            print packet
             db.insertDb(time,consumption)
             xb.xbee_write(packet)
-            print('-------------------------------------------------------------')
             
-            #raw_input()
             sleep(3)
-            #print (level)
+            
         except Exception as e:
             print(e)
             sleep(1)
