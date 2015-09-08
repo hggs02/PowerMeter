@@ -1,0 +1,84 @@
++import RPi.GPIO as gpio
++from RPi.GPIO import OUT as out
++from RPi.GPIO import LOW as low 
++from RPi.GPIO import HIGH as high 
+ 
++class LED():
++	def __init__(self,threshold):
++		self.pin_no = 11
++		self.threshold = threshold
++		self.led_init()
+ 
+-class Xbee(object):
++	def led_init():
++		gpio.setmode(gpio.BOARD)
++		gpio.setwarnings(False)
++		gpio.setup(self.pin_no, out)
++		gpio.output(self.pin_no, low)
++
++	def on():
++		gpio.output(self.pin_no, high)
++
++class XBEE():
+     
+     def __init__ (self):
+         self.obj = serial.Serial('/dev/ttyUSB0',9600,timeout=1)
+@@ -55,30 +73,34 @@ class PLC():
+ 
+ db = database_class() 
+ 
+-if __name__ == '__main__':
++xb = XBEE()
++plc = PLC()
++led = LED(12)	# Here 12 is the max threshold value
+ 
+-    #xb = Xbee()
+-    plc = PLC()
+-    
+-    print('\t\tPOWER CONSUMPTION')
++print('\t\tPOWER CONSUMPTION')
+ 
+-    while True:
+-        try:
+-            time  = strftime("%Y-%m-%d %H:%M:%S")
+-            #consumption = dummyPacket()
+-            consumption  = plc.read_float()
+-            
+-            print('-------------------------------------------------')
+-            print '|',time,'\tConsumption => \t',consumption,'Unit','|','\n'
+-            packet = str(time)+';'+str(consumption)
+-            db.insertDb(time,consumption)
+-            #xb.xbee_write(packet)
+-            
+-            sleep(30)
+-            
+-        except Exception as e:
+-            print(e)
+-            sleep(30)
++while True:
++    try:
++        time  = strftime("%Y-%m-%d %H:%M:%S")
++        #consumption = dummyPacket()
++        consumption  = plc.read_float()
++        
++        if(consumption > led.threshold)
++        {
++        	led.on()		# Switch ON the led if consumption exceeds the threshold
++        }
++        
++        print('-------------------------------------------------')
++        print '|',time,'\tConsumption => \t',consumption,'Unit','|','\n'
++        packet = str(time)+';'+str(consumption)
++        db.insertDb(time,consumption)
++        xb.xbee_write(packet)
++        
++        sleep(30)
++        
++    except Exception as e:
++        print(e)
++        sleep(30)
+     
+    
+         
+
+
