@@ -1,0 +1,5 @@
+1. Use old console.py
+2. changes.txt shows new additions , 
+	"+" :-  line added,
+	"-" :- line deleted
+3. database_handler.py contains code to insert data to database
